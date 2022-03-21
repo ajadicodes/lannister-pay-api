@@ -1,0 +1,164 @@
+openapi: 3.0.0
+info:
+  title: LannisterPay REST API
+  version: 1.0.0
+paths:
+  /compute-transaction-fee:
+    post:
+      operationId: computeTransactionFee_query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ID:
+                  type: integer
+                  format: int32
+                Amount:
+                  type: integer
+                  format: int32
+                Currency:
+                  type: string
+                CurrencyCountry:
+                  type: string
+                Customer:
+                  $ref: '#/components/schemas/CustomerType'
+                PaymentEntity:
+                  $ref: '#/components/schemas/PaymentEntityType'
+              required:
+                - ID
+                - Amount
+                - Currency
+                - CurrencyCountry
+                - Customer
+                - PaymentEntity
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComputeTransactionFeeResponse'
+  /fees:
+    post:
+      operationId: fees_mutation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                FeeConfigurationSpec:
+                  type: string
+              required:
+                - FeeConfigurationSpec
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddFeeMutationResponse'
+components:
+  schemas:
+    AddFeeMutationResponse:
+      type: object
+      required:
+        - code
+        - success
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        success:
+          type: boolean
+        message:
+          type: string
+        status:
+          type: string
+    ComputeTransactionFeeResponse:
+      type: object
+      required:
+        - code
+        - success
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        success:
+          type: boolean
+        message:
+          type: string
+        status:
+          type: string
+        AppliedFeeID:
+          type: string
+        AppliedFeeValue:
+          type: integer
+          format: int32
+        ChargeAmount:
+          type: integer
+          format: int32
+        SettlementAmount:
+          type: integer
+          format: int32
+    CustomerType:
+      type: object
+      required:
+        - ID
+        - EmailAddress
+        - FullName
+        - BearsFee
+      properties:
+        ID:
+          type: integer
+          format: int32
+        EmailAddress:
+          type: string
+        FullName:
+          type: string
+        BearsFee:
+          type: boolean
+    PaymentEntityType:
+      type: object
+      required:
+        - ID
+        - Issuer
+        - Brand
+        - Number
+        - SixID
+        - Type
+        - Country
+      properties:
+        ID:
+          type: integer
+          format: int32
+        Issuer:
+          type: string
+        Brand:
+          type: string
+        Number:
+          type: string
+        SixID:
+          type: object
+        Type:
+          type: string
+        Country:
+          type: string
+    Mutation:
+      type: object
+      required:
+        - fees
+      properties:
+        fees:
+          $ref: '#/components/schemas/AddFeeMutationResponse'
+    Query:
+      type: object
+      required:
+        - computeTransactionFee
+      properties:
+        computeTransactionFee:
+          $ref: '#/components/schemas/ComputeTransactionFeeResponse'

@@ -1,0 +1,57 @@
+interface MutationResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+}
+
+type AddFeeMutationResponse implements MutationResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  status: String
+}
+
+type ComputeTransactionFeeResponse implements MutationResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  status: String
+  AppliedFeeID: String
+  AppliedFeeValue: Int
+  ChargeAmount: Int
+  SettlementAmount: Int
+}
+
+input CustomerType {
+  ID: Int!
+  EmailAddress: String!
+  FullName: String!
+  BearsFee: Boolean!
+}
+
+scalar IntString
+
+input PaymentEntityType {
+  ID: Int!
+  Issuer: String!
+  Brand: String!
+  Number: String!
+  SixID: IntString!
+  Type: String!
+  Country: String!
+}
+
+type Mutation {
+  fees(FeeConfigurationSpec: String!): AddFeeMutationResponse!
+}
+
+type Query {
+  computeTransactionFee(
+    ID: Int!
+    Amount: Int!
+    Currency: String!
+    CurrencyCountry: String!
+    Customer: CustomerType!
+    PaymentEntity: PaymentEntityType!
+  ): ComputeTransactionFeeResponse!
+}
