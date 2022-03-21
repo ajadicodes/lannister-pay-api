@@ -2,7 +2,7 @@
   "name": "lannister-pay-api",
   "version": "1.0.0",
   "description": "LannisterPay’s transaction fee processing service.",
-  "main": "build/index.js",
+  "main": "build/src/index.js",
   "author": "Iyanuoluwa Adebayo",
   "license": "MIT",
   "dependencies": {
@@ -47,7 +47,7 @@
     "typescript": "^4.6.2"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=production node build/index.js",
+    "start": "cross-env NODE_ENV=production node build/src/index.js",
     "dev": "cross-env NODE_ENV=development ts-node-dev --ignore-watch=swagger.json src/index.ts",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "lint": "gts lint",
