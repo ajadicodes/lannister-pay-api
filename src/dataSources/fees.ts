@@ -7,7 +7,7 @@ export default class Fees extends MongoDataSource<FeeSpec> {
   getSpecFees = async (fields: Fields) => {
     try {
       // await connectionToDB();
-      return this.find(fields, {ttl: 60});
+      return this.find(fields);
     } catch (error: unknown) {
       console.error(error);
       throw error;
