@@ -1,12 +1,13 @@
 import {COMPUTE_TRANSACTION_FEE, testServer} from '../helpers/utils';
 import {sampleFeeSpec, sampleTransactions} from '../helpers/data/transaction';
 
-import dbConnect from '../../src/dbConnect';
+import Fees from '../../src/dataSources/fees';
+import connectionToDB from '../../src/utils/connectionToDB';
 import {feeSpecModel} from '../../src/models/feeSpec.model';
 import mongoose from 'mongoose';
 
 beforeAll(async () => {
-  await dbConnect();
+  await connectionToDB();
   await feeSpecModel.deleteMany({});
 
   // initialise database with valid test data for this set of tests in

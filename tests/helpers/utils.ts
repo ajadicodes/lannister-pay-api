@@ -1,7 +1,7 @@
 import {apolloGraphqlServer} from '../../src/servers/graphql';
 import express from 'express';
 import {gql} from 'apollo-server-core';
-import {serverConfig} from '../../src/servers/';
+import {serverConfig} from '../../src/servers/config';
 
 export const ADD_FEE_CONFIGURATION_SPEC = gql`
   mutation AddFeeConfigurationSpec($FeeConfigurationSpec: String!) {

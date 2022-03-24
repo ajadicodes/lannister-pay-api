@@ -1,11 +1,11 @@
 import mongoose, {Schema} from 'mongoose';
 
-import {FeeSpec} from '../types';
+import {FeeSpecDocument} from '../types';
 
 // import beautifulUnique from 'mongoose-beautiful-unique-validation'
 // import mongooseValidationErrorTransform from 'mongoose-validation-error-transform'
 
-const schema = new Schema<FeeSpec>({
+const schema = new Schema<FeeSpecDocument>({
   feeID: {type: String, required: true, unique: true},
   feeCurrency: {type: String, required: true},
   feeLocale: {type: String, required: true},
@@ -35,5 +35,5 @@ schema.index({
   feeLocale: 1,
   feeCurrency: 1,
 });
-const feeSpecModel = mongoose.model('FeeSpecModel', schema);
+const feeSpecModel = mongoose.model('FeeSpecModel', schema, 'feespecmodels');
 export {feeSpecModel};

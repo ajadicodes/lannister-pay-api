@@ -1,5 +1,8 @@
-import {CustomerType, QueryComputeTransactionFeeArgs} from './resolvers-types';
-import {Entity, FeeSpec, FeeType, FeeValue} from './types';
+import {
+  CustomerType,
+  QueryComputeTransactionFeeArgs,
+} from '../types/resolvers-types';
+import {Entity, FeeSpec, FeeType, FeeValue} from '../types';
 import {GraphQLScalarType, Kind} from 'graphql';
 
 import {UserInputError} from 'apollo-server-errors';

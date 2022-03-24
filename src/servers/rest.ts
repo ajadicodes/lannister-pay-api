@@ -1,5 +1,6 @@
-import {ContextFn, OpenAPI, useSofa} from 'sofa-api';
+import {OpenAPI, useSofa} from 'sofa-api';
 
+import {ContextValue} from 'sofa-api/types';
 import {GraphQLSchema} from 'graphql';
 import cors from 'cors';
 import {resolve} from 'path';
@@ -9,7 +10,7 @@ import swaggerUi from 'swagger-ui-express';
 export default (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   app: any,
-  {schema, context}: {schema: GraphQLSchema; context: ContextFn}
+  {schema, context}: {schema: GraphQLSchema; context: ContextValue}
 ) => {
   const openApi = OpenAPI({
     schema,
