@@ -1,4 +1,5 @@
-import {Document} from 'mongoose';
+import {Document, Model} from 'mongoose';
+
 import {ObjectId} from 'mongodb';
 
 export interface Entity {
@@ -52,4 +53,12 @@ export interface Fields {
     | boolean
     | ObjectId
     | (string | number | boolean | ObjectId)[];
+}
+
+interface DataSources {
+  fees: Model<FeeSpec>;
+}
+
+export interface ContextValue {
+  dataSources?: DataSources;
 }

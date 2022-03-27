@@ -12,6 +12,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import rest from '../../src/servers/rest';
 import {serverConfig} from '../../src/servers/config';
+import {testServer} from '../helpers/utils';
 
 beforeEach(async () => {
   await connectionToDB();
@@ -19,11 +20,8 @@ beforeEach(async () => {
 });
 
 describe('/fees', () => {
+  const app = testServer('rest');
   test('should return a request succeeded status', async () => {
-    const app = express();
-    app.use(bodyParser.json());
-    rest(app, serverConfig);
-
     const response = await request(app)
       .post('/fees')
       .send(correctSampleData.payload);
@@ -38,9 +36,7 @@ describe('/fees', () => {
   });
 
   test('should fail as fee spec contains invalid format', async () => {
-    const app = express();
-    app.use(bodyParser.json());
-    rest(app, serverConfig);
+    // const app = testServer('rest');
 
     const response = await request(app)
       .post('/fees')

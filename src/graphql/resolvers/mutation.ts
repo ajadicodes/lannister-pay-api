@@ -3,13 +3,13 @@ import {
   MutationFeesArgs,
 } from '../../types/resolvers-types';
 
+import {ContextValue} from '../../types';
 import {parseFeeSpec} from '../../utils';
 
 export const addFeeConfigurationSpec = async (
   _root: unknown,
   args: MutationFeesArgs,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  context: any
+  context: ContextValue
 ): Promise<AddFeeMutationResponse> => {
   // context.dataSources.fees.initialize();
   // let response: unknown = null;
@@ -21,7 +21,7 @@ export const addFeeConfigurationSpec = async (
     const feeSpec = specs.map(spec => parseFeeSpec(spec));
 
     // save fee specification to database
-    await context.dataSources.fees.insertMany(feeSpec);
+    await context?.dataSources?.fees.insertMany(feeSpec);
 
     return {
       status: 'ok',
