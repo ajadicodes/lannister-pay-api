@@ -4,12 +4,12 @@ import {
   correctSampleData,
 } from '../helpers/data/fees';
 
-import dbConnect from '../../src/dbConnect';
+import connectionToDB from '../../src/utils/connectionToDB';
 import {feeSpecModel} from '../../src/models/feeSpec.model';
 import mongoose from 'mongoose';
 
 beforeEach(async () => {
-  await dbConnect();
+  await connectionToDB();
   await feeSpecModel.deleteMany({});
 });
 
@@ -45,7 +45,6 @@ describe('Fees Mutation', () => {
   });
 });
 
-afterAll(async () => {
-  await feeSpecModel.deleteMany({});
+afterAll(() => {
   mongoose.connection.close();
 });

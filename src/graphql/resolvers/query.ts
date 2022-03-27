@@ -1,46 +1,45 @@
 import {
   ComputeTransactionFeeResponse,
   QueryComputeTransactionFeeArgs,
-} from '../resolvers-types';
-import {computeAppliedFeeValue, computeChargeAmount} from '../utils';
+} from '../../types/resolvers-types';
+import {computeAppliedFeeValue, computeChargeAmount} from '../../utils';
 import {isEmpty, sortBy} from 'lodash';
 
-import {FeeSpec} from '../types';
-import {Model} from 'mongoose';
 import {UserInputError} from 'apollo-server-errors';
 
 export const computeTransactionFee = async (
   _root: unknown,
   args: QueryComputeTransactionFeeArgs,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  context: {models: {feeSpecModel: Model<FeeSpec, {}, {}, {}>}}
+  context: any
 ): Promise<ComputeTransactionFeeResponse> => {
   try {
+    // context.dataSources.fees.initialize();
     // ensure fee specification exists
-    const feeSpecDocCount = await context.models.feeSpecModel.countDocuments();
+    const feeSpecDocCount = await context.dataSources.fees.getDocumentCount();
     if (feeSpecDocCount === 0)
       throw new UserInputError('Call /fee endpoint first');
 
     const locale =
       args.CurrencyCountry === args.PaymentEntity.Country ? 'LOCL' : 'INTL';
 
-    const feeSpecDoc = await context.models.feeSpecModel
-      .find({
-        'entity.entityProperty': {
-          $in: [
-            args.PaymentEntity.Brand,
-            args.PaymentEntity.Issuer,
-            args.PaymentEntity.Number,
-            args.PaymentEntity.SixID,
-            args.PaymentEntity.ID,
-            '*',
-          ],
-        },
-        'entity.feeEntity': {$in: [args.PaymentEntity.Type, '*']},
-        feeLocale: {$in: [locale, '*']},
-        feeCurrency: {$in: [args.Currency, '*']},
-      })
-      .lean();
+    const fields = {
+      'entity.entityProperty': {
+        $in: [
+          args.PaymentEntity.Brand,
+          args.PaymentEntity.Issuer,
+          args.PaymentEntity.Number,
+          args.PaymentEntity.SixID,
+          args.PaymentEntity.ID,
+          '*',
+        ],
+      },
+      'entity.feeEntity': {$in: [args.PaymentEntity.Type, '*']},
+      feeLocale: {$in: [locale, '*']},
+      feeCurrency: {$in: [args.Currency, '*']},
+    };
+
+    const feeSpecDoc = await context.dataSources.fees.getSpecFees(fields);
 
     if (isEmpty(feeSpecDoc))
       throw new UserInputError('No fee configuration for this transaction');

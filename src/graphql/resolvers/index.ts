@@ -1,7 +1,7 @@
-import {IntStringScalar} from './utils';
-import {Resolvers} from './resolvers-types';
-import {addFeeConfigurationSpec} from './resolvers/mutation';
-import {computeTransactionFee} from './resolvers/query';
+import {IntStringScalar} from '../../utils';
+import {Resolvers} from '../../types/resolvers-types';
+import {addFeeConfigurationSpec} from './mutation';
+import {computeTransactionFee} from './query';
 
 export const resolvers: Resolvers = {
   Mutation: {

@@ -1,5 +1,8 @@
-import {CustomerType, QueryComputeTransactionFeeArgs} from './resolvers-types';
-import {Entity, FeeSpec, FeeType, FeeValue} from './types';
+import {
+  CustomerType,
+  QueryComputeTransactionFeeArgs,
+} from '../types/resolvers-types';
+import {Entity, FeeSpec, FeeType, FeeValue} from '../types';
 import {GraphQLScalarType, Kind} from 'graphql';
 
 import {UserInputError} from 'apollo-server-errors';
@@ -15,38 +18,46 @@ const assertNever = (value: never): never => {
   );
 };
 
-const parseFeeIDSpec = (str: string | undefined) => {
-  if (!str) throw new UserInputError('Missing fee ID specification');
-
-  if (str.length !== 8 || !validator.isAlphanumeric(str))
-    throw new UserInputError('Invalid fee configuration identifier');
-
-  return str;
-};
-
-const parseFeeCurrencySpec = (str: string | undefined) => {
-  if (!str) throw new UserInputError('Missing fee currency specification');
-
-  if (!validator.isIn(str, ['NGN', '*']))
-    throw new UserInputError('Invalid fee configuration currency');
-
-  return str;
-};
-
-const parseFeeLocaleSpec = (str: string | undefined) => {
-  if (!str) throw new UserInputError('Missing fee locale specification');
-
-  if (!validator.isIn(str, ['LOCL', 'INTL', '*']))
-    throw new UserInputError('Invalid fee locale');
-
-  return str;
-};
-
-const parseFeeEntitySpec = (str: string | undefined) => {
-  if (!str) throw new UserInputError('Missing fee entity specification');
+const parseFeeIDSpec = (value: unknown) => {
+  if (!value) throw new UserInputError('Missing fee ID specification');
 
   if (
-    !validator.isIn(str, [
+    typeof value !== 'string' ||
+    value.length !== 8 ||
+    !validator.isAlphanumeric(value)
+  )
+    throw new UserInputError('Invalid fee configuration identifier');
+
+  return value;
+};
+
+const parseFeeCurrencySpec = (value: unknown) => {
+  if (!value) throw new UserInputError('Missing fee currency specification');
+
+  if (typeof value !== 'string' || !validator.isIn(value, ['NGN', '*']))
+    throw new UserInputError('Invalid fee configuration currency');
+
+  return value;
+};
+
+const parseFeeLocaleSpec = (value: unknown) => {
+  if (!value) throw new UserInputError('Missing fee locale specification');
+
+  if (
+    typeof value !== 'string' ||
+    !validator.isIn(value, ['LOCL', 'INTL', '*'])
+  )
+    throw new UserInputError('Invalid fee locale');
+
+  return value;
+};
+
+const parseFeeEntitySpec = (value: unknown) => {
+  if (!value) throw new UserInputError('Missing fee entity specification');
+
+  if (
+    typeof value !== 'string' ||
+    !validator.isIn(value, [
       'CREDIT-CARD',
       'DEBIT-CARD',
       'BANK-ACCOUNT',
@@ -57,20 +68,25 @@ const parseFeeEntitySpec = (str: string | undefined) => {
   )
     throw new UserInputError('Invalid fee entity');
 
-  return str;
+  return value;
 };
 
-const parseEntityPropertySpec = (str: string) => {
-  // TODO: what do I need to validate here?
-  return str;
+const parseEntityPropertySpec = (value: unknown) => {
+  // TODO: what else do I need to validate here?
+  if (typeof value !== 'string')
+    throw new UserInputError('Invalid entity property');
+  return value;
 };
 
 // *(*)
-const parseEntitySpec = (str: string | undefined): Entity => {
+const parseEntitySpec = (value: unknown): Entity => {
   // TODO: a more elegant way of getting the values in this format -- *(*)?
-  if (!str) throw new UserInputError('Missing Entity Specification');
+  if (!value) throw new UserInputError('Missing Entity Specification');
 
-  const values = str.split('(');
+  if (typeof value !== 'string')
+    throw new UserInputError('Invalid entity specification');
+
+  const values = value.split('(');
   const feeEntity = values[0];
 
   // remove trailing ')'
@@ -82,45 +98,52 @@ const parseEntitySpec = (str: string | undefined): Entity => {
   };
 };
 
-const parseFeeTypeSpec = (str: string | undefined) => {
-  if (!str) throw new UserInputError('Missing fee type specification');
+const parseFeeTypeSpec = (value: unknown) => {
+  if (!value) throw new UserInputError('Missing fee type specification');
 
-  if (!validator.isIn(str, ['FLAT', 'PERC', 'FLAT_PERC']))
+  if (
+    typeof value !== 'string' ||
+    !validator.isIn(value, ['FLAT', 'PERC', 'FLAT_PERC'])
+  )
     throw new UserInputError('Invalid fee type specification');
 
-  return str;
+  return value;
 };
 
-const isNumericAndNonNegative = (str: string) => {
+const isNumericAndNonNegative = (value: unknown) => {
   // 0 inclusive
-  return validator.isNumeric(str) && Number(str) >= 0;
+  return (
+    typeof value === 'string' &&
+    validator.isNumeric(value) &&
+    Number(value) >= 0
+  );
 };
 
-const parseFeeValueSpec = (
-  str: string | undefined,
-  type: FeeType
-): FeeValue => {
-  if (!str) throw new UserInputError('Missing fee value specification');
+const parseFeeValueSpec = (value: unknown, type: FeeType): FeeValue => {
+  if (!value) throw new UserInputError('Missing fee value specification');
+
+  if (typeof value !== 'string')
+    throw new UserInputError('Invalid fee value specification');
 
   // is it a flat and percentage value?
   switch (type) {
     case 'FLAT':
       return {
         type: 'FLAT',
-        flatValue: str,
+        flatValue: value,
       };
 
     case 'PERC':
       return {
         type: 'PERC',
-        percValue: str,
+        percValue: value,
       };
 
     case 'FLAT_PERC': {
-      if (!str.includes(':'))
+      if (!value.includes(':'))
         throw new UserInputError('Bad flat and percentage value formats');
 
-      const flatAndPercValues = str.split(':');
+      const flatAndPercValues = value.split(':');
       if (flatAndPercValues.length !== 2)
         throw new UserInputError('Invalid Flat and Percentage values');
 
@@ -141,8 +164,12 @@ const parseFeeValueSpec = (
   }
 };
 
-export const parseFeeSpec = (str: string): FeeSpec => {
-  const values = str.split(' ');
+export const parseFeeSpec = (value: unknown): FeeSpec => {
+  if (!value) throw new UserInputError('Missing parse fee specification');
+
+  if (typeof value !== 'string')
+    throw new UserInputError('Invalid fee specification');
+  const values = value.split(' ');
 
   // {FEE-ID} {FEE-CURRENCY} {FEE-LOCALE} {FEE-ENTITY}({ENTITY-PROPERTY}) : APPLY {FEE-TYPE} {FEE-VALUE}
   const feeID = values[0];

@@ -1,17 +1,17 @@
 import {sampleFeeSpec, sampleTransactions} from '../helpers/data/transaction';
 
 import bodyParser from 'body-parser';
-import dbConnect from '../../src/dbConnect';
+import connectionToDB from '../../src/utils/connectionToDB';
 import express from 'express';
 import {feeSpecModel} from '../../src/models/feeSpec.model';
 import mongoose from 'mongoose';
 // eslint-disable-next-line node/no-unpublished-import
 import request from 'supertest';
 import rest from '../../src/servers/rest';
-import {serverConfig} from '../../src/servers';
+import {serverConfig} from '../../src/servers/config';
 
 beforeAll(async () => {
-  await dbConnect();
+  await connectionToDB();
   await feeSpecModel.deleteMany({});
 
   // initialise database with valid test data for this set of tests in

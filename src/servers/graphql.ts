@@ -1,19 +1,23 @@
 import {ApolloServer} from 'apollo-server-express';
 import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core/dist/plugin/drainHttpServer';
-import {ContextFunction} from 'apollo-server-core';
+import {ContextValue} from 'sofa-api/types';
 import {GraphQLSchema} from 'graphql';
 import http from 'http';
+import {serverConfig} from './config';
 
 export const apolloGraphqlServer = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   app: any,
-  {schema, context}: {schema: GraphQLSchema; context: ContextFunction}
+  {schema, context}: {schema: GraphQLSchema; context: ContextValue}
 ) => {
   const httpServer = http.createServer(app);
   const server = new ApolloServer({
     schema,
     plugins: [ApolloServerPluginDrainHttpServer({httpServer})],
     context,
+    // dataSources: () => ({
+    //   fees: new Fees(feeSpecModel),
+    // }),
     // introspection: true,
     // formatError: err => {
     //   // Don't give the specific errors to the client.
@@ -34,9 +38,21 @@ export const apolloGraphqlServer = (
 export default async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   app: any,
-  {schema, context}: {schema: GraphQLSchema; context: ContextFunction}
+  {
+    schema,
+    context,
+  }: {schema: GraphQLSchema; context: typeof serverConfig.context}
 ) => {
   const graphqlServer = apolloGraphqlServer(app, {schema, context});
+
+  // manually call dataSource's initialise
+  // see https://github.com/GraphQLGuide/apollo-datasource-mongodb/issues/42
+  // console.log('initialising data sources..........');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // Object.values<any>(context.dataSources).forEach(dataSource =>
+  //   dataSource.initialize()
+  // );
+
   // const buildPath = path.join(process.cwd(), 'build');
 
   // // expose graphqli-explorer
