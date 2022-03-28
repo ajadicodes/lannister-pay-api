@@ -1,11 +1,10 @@
+import {FeeSpec, FeeSpecDocument} from '../types';
 import mongoose, {Schema} from 'mongoose';
-
-import {FeeSpecDocument} from '../types';
 
 // import beautifulUnique from 'mongoose-beautiful-unique-validation'
 // import mongooseValidationErrorTransform from 'mongoose-validation-error-transform'
 
-const schema = new Schema<FeeSpecDocument>({
+const schema = new Schema<FeeSpec>({
   feeID: {type: String, required: true, unique: true},
   feeCurrency: {type: String, required: true},
   feeLocale: {type: String, required: true},

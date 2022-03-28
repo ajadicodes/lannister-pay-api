@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import rest from '../../src/servers/rest';
 import {serverConfig} from '../../src/servers/config';
+import {testServer} from '../helpers/utils';
 
 beforeAll(async () => {
   await connectionToDB();
@@ -21,9 +22,7 @@ beforeAll(async () => {
 
 describe('/compute-transaction-fee', () => {
   test('example 1 should return correct transaction fee', async () => {
-    const app = express();
-    app.use(bodyParser.json());
-    rest(app, serverConfig);
+    const app = testServer('rest');
 
     const response = await request(app)
       .post('/compute-transaction-fee')
@@ -51,9 +50,7 @@ describe('/compute-transaction-fee', () => {
   });
 
   test('example 2 should return correct transaction fee', async () => {
-    const app = express();
-    app.use(bodyParser.json());
-    rest(app, serverConfig);
+    const app = testServer('rest');
 
     const response = await request(app)
       .post('/compute-transaction-fee')
@@ -82,9 +79,7 @@ describe('/compute-transaction-fee', () => {
   });
 
   test('example 3 should return correct transaction fee', async () => {
-    const app = express();
-    app.use(bodyParser.json());
-    rest(app, serverConfig);
+    const app = testServer('rest');
 
     const response = await request(app)
       .post('/compute-transaction-fee')
