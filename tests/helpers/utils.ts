@@ -1,7 +1,6 @@
-import {graphql, rest} from '../../src/servers';
-
-import bodyParser from 'body-parser';
+import {apolloGraphqlServer} from '../../src/servers/graphql';
 import express from 'express';
+import fastify from 'fastify';
 import {gql} from 'apollo-server-core';
 import {serverConfig} from '../../src/servers/config';
 
@@ -13,43 +12,6 @@ export const ADD_FEE_CONFIGURATION_SPEC = gql`
     }
   }
 `;
-
-export const createFeeConfigurationSpecQuery = (spec: unknown) => {
-  return `mutation {fees(FeeConfigurationSpec: "${spec}") { code success }}`;
-};
-
-export const computeTransactionFeeQuery = ({
-  id,
-  amount,
-  currency,
-  currencyCountry,
-  customer,
-  paymentEntity,
-}: {
-  id: unknown;
-  amount: unknown;
-  currency: unknown;
-  currencyCountry: unknown;
-  customer: unknown;
-  paymentEntity: unknown;
-}) => {
-  return `query {computeTransactionFee(
-    ID: ${id}
-    Amount: ${amount}
-    Currency: ${currency}
-    CurrencyCountry: ${currencyCountry}
-    Customer: ${customer}
-    PaymentEntity: ${paymentEntity}
-  ) {
-    code
-    success
-    message
-    AppliedFeeID
-    AppliedFeeValue
-    ChargeAmount
-    SettlementAmount
-  }}`;
-};
 
 export const COMPUTE_TRANSACTION_FEE = gql`
   query ComputeTransactionFee(
@@ -79,15 +41,6 @@ export const COMPUTE_TRANSACTION_FEE = gql`
   }
 `;
 
-export const testServer = (server: 'rest' | 'graphql' = 'rest') => {
-  const app = express();
-
-  if (server === 'rest') {
-    app.use(bodyParser.json());
-    rest(app, serverConfig);
-    return app;
-  }
-
-  graphql(app, serverConfig);
-  return app;
+export const testServer = () => {
+  return apolloGraphqlServer(fastify(), serverConfig);
 };

@@ -3,6 +3,7 @@ import {sampleFeeSpec, sampleTransactions} from '../helpers/data/transaction';
 import bodyParser from 'body-parser';
 import connectionToDB from '../../src/utils/connectionToDB';
 import express from 'express';
+import fastify from 'fastify';
 import {feeSpecModel} from '../../src/models/feeSpec.model';
 import mongoose from 'mongoose';
 // eslint-disable-next-line node/no-unpublished-import
@@ -22,7 +23,7 @@ beforeAll(async () => {
 
 describe('/compute-transaction-fee', () => {
   test('example 1 should return correct transaction fee', async () => {
-    const app = testServer('rest');
+    const app = fastify();
 
     const response = await request(app)
       .post('/compute-transaction-fee')
@@ -50,7 +51,7 @@ describe('/compute-transaction-fee', () => {
   });
 
   test('example 2 should return correct transaction fee', async () => {
-    const app = testServer('rest');
+    const app = fastify();
 
     const response = await request(app)
       .post('/compute-transaction-fee')
@@ -79,7 +80,7 @@ describe('/compute-transaction-fee', () => {
   });
 
   test('example 3 should return correct transaction fee', async () => {
-    const app = testServer('rest');
+    const app = fastify();
 
     const response = await request(app)
       .post('/compute-transaction-fee')

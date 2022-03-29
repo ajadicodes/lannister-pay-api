@@ -6,6 +6,7 @@ import {
 import bodyParser from 'body-parser';
 import connectionToDB from '../../src/utils/connectionToDB';
 import express from 'express';
+import fastify from 'fastify';
 import {feeSpecModel} from '../../src/models/feeSpec.model';
 import mongoose from 'mongoose';
 // eslint-disable-next-line node/no-unpublished-import
@@ -20,7 +21,7 @@ beforeEach(async () => {
 });
 
 describe('/fees', () => {
-  const app = testServer('rest');
+  const app = fastify();
   test('should return a request succeeded status', async () => {
     const response = await request(app)
       .post('/fees')

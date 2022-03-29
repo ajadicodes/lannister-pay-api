@@ -1,18 +1,20 @@
-import Fastify from 'fastify';
 import {PORT} from './config';
 import bodyParser from 'body-parser';
 import express from 'express';
+import fastify from 'fastify';
 import graphql from './servers/graphql';
 import rest from './servers/rest';
 import {serverConfig} from './servers/config';
 
 (async () => {
-  const app = Fastify();
+  const app = fastify({
+    logger: true,
+  });
   // app.use(bodyParser.json());
 
-  graphql(app, serverConfig);
-  // rest(app, serverConfig);
+  await graphql(app, serverConfig);
+  rest(app, serverConfig);
 
-  app.listen(PORT);
+  await app.listen(PORT);
   console.log(`🚀  Server ready http://localhost:${PORT}`);
 })();
