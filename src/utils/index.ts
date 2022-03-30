@@ -167,12 +167,12 @@ export const parseFeeSpec = (str: string): FeeSpec => {
     feeValue: parseFeeValueSpec(feeValue, parsedFeeType),
   };
 
-  // specificity properties
+  // weight based specificity
   const specificityCount = computeSpecificityCount([
-    feeSpec.feeCurrency, // may not be necessary if we only allow "NGN" specification
-    feeSpec.feeLocale,
-    feeSpec.entity.feeEntity,
-    feeSpec.entity.entityProperty,
+    feeSpec.entity.feeEntity === '*' ? 0 : 8,
+    feeSpec.entity.entityProperty === '*' ? 0 : 4,
+    feeSpec.feeLocale === '*' ? 0 : 2,
+    feeSpec.feeCurrency === '*' ? 0 : 1, // may not be necessary if we only allow "NGN" specification
   ]);
 
   return {...feeSpec, specificityCount};
@@ -260,16 +260,5 @@ export const IntStringScalar = new GraphQLScalarType({
 // a valid specificity count is a string with exactly one "*"
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const computeSpecificityCount = (collection: any[]) => {
-  return reduce(
-    collection,
-    (sum, n) => {
-      if (n === '*') {
-        n = 1;
-      } else {
-        n = 0;
-      }
-      return sum + n;
-    },
-    0
-  );
+  return reduce(collection, (sum, n) => sum + n, 0);
 };

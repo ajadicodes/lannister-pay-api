@@ -160,7 +160,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: '*',
     entity: {feeEntity: 'BANK-ACCOUNT', entityProperty: 'UBA'},
     feeValue: {type: 'FLAT_PERC', flatValue: '25', percValue: '2'},
-    specificityCount: 1,
+    specificityCount: 13,
   },
   {
     feeID: 'FWLNAA02',
@@ -168,7 +168,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: 'LOCL',
     entity: {feeEntity: '*', entityProperty: '*'},
     feeValue: {type: 'FLAT_PERC', flatValue: '50', percValue: '1.2'},
-    specificityCount: 2,
+    specificityCount: 3,
   },
   {
     feeID: 'FWLNAA08',
@@ -176,7 +176,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: 'INTL',
     entity: {feeEntity: 'DEBIT-CARD', entityProperty: '539983'},
     feeValue: {type: 'PERC', percValue: '5.5'},
-    specificityCount: 0,
+    specificityCount: 15,
   },
   {
     feeID: 'FWLNAA03',
@@ -184,7 +184,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: '*',
     entity: {feeEntity: 'USSD', entityProperty: 'GLOBACOM'},
     feeValue: {type: 'FLAT', flatValue: '65'},
-    specificityCount: 1,
+    specificityCount: 13,
   },
   {
     feeID: 'FWLNAA09',
@@ -192,7 +192,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: '*',
     entity: {feeEntity: 'USSD', entityProperty: 'MTN'},
     feeValue: {type: 'FLAT', flatValue: '35'},
-    specificityCount: 1,
+    specificityCount: 13,
   },
   {
     feeID: 'FWLNAA04',
@@ -200,7 +200,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: '*',
     entity: {feeEntity: 'BANK-ACCOUNT', entityProperty: '*'},
     feeValue: {type: 'FLAT', flatValue: '35'},
-    specificityCount: 2,
+    specificityCount: 9,
   },
   {
     feeID: 'FWLNAA06',
@@ -208,7 +208,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: 'INTL',
     entity: {feeEntity: 'CREDIT-CARD', entityProperty: '*'},
     feeValue: {type: 'PERC', percValue: '2.0'},
-    specificityCount: 1,
+    specificityCount: 11,
   },
   {
     feeID: 'FWLNAA01',
@@ -216,7 +216,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: '*',
     entity: {feeEntity: '*', entityProperty: '*'},
     feeValue: {type: 'PERC', percValue: '5'},
-    specificityCount: 3,
+    specificityCount: 1,
   },
   {
     feeID: 'FWLNAA10',
@@ -224,7 +224,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: '*',
     entity: {feeEntity: 'BANK-ACCOUNT', entityProperty: 'FBN'},
     feeValue: {type: 'FLAT_PERC', flatValue: '15', percValue: '1.5'},
-    specificityCount: 1,
+    specificityCount: 13,
   },
   {
     feeID: 'FWLNAA11',
@@ -232,7 +232,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: '*',
     entity: {feeEntity: 'BANK-ACCOUNT', entityProperty: 'GTB'},
     feeValue: {type: 'FLAT_PERC', flatValue: '11', percValue: '1'},
-    specificityCount: 1,
+    specificityCount: 13,
   },
   {
     feeID: 'FWLNAA07',
@@ -240,7 +240,7 @@ export const sampleFeeSpec: FeeSpec[] = [
     feeLocale: 'INTL',
     entity: {feeEntity: 'CREDIT-CARD', entityProperty: 'VISA'},
     feeValue: {type: 'PERC', percValue: '2.5'},
-    specificityCount: 0,
+    specificityCount: 15,
   },
 ];
 

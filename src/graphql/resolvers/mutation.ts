@@ -20,6 +20,9 @@ export const addFeeConfigurationSpec = async (
     // transform each line in specs into document ready objects
     const feeSpec = specs.map(spec => parseFeeSpec(spec));
 
+    // empty database before new upload
+    await context.dataSources.fees?.deleteMany({});
+
     // save fee specification to database
     await context.dataSources.fees?.insertMany(feeSpec);
 

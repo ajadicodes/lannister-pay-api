@@ -12,7 +12,9 @@ import mongoose from 'mongoose';
 // eslint-disable-next-line node/no-unpublished-import
 import request from 'supertest';
 import rest from '../src/servers/rest';
+import {sampleFeeSpec} from './helpers/data/transactions';
 import {serverConfig} from '../src/servers/config';
+import {sum} from 'lodash';
 
 beforeEach(async () => {
   await connectionToDB();
@@ -36,6 +38,18 @@ describe('fees', () => {
       );
       expect(response.body.success).toBe(
         feeSpecification.expectedResponse.success
+      );
+
+      // test specificity weight
+      const feeSpecDoc = await feeSpecModel.find(
+        {},
+        {_id: 0, specificityCount: 1}
+      );
+      const totalSpecificityWeight = sum(
+        feeSpecDoc.map(doc => doc.specificityCount)
+      );
+      expect(totalSpecificityWeight).toBe(
+        sum(sampleFeeSpec.map(spec => spec.specificityCount))
       );
     });
 
@@ -85,6 +99,18 @@ describe('fees', () => {
         feeSpecification.expectedResponse.success
       );
       expect(errors).toBeUndefined();
+
+      // test specificity weight
+      const feeSpecDoc = await feeSpecModel.find(
+        {},
+        {_id: 0, specificityCount: 1}
+      );
+      const totalSpecificityWeight = sum(
+        feeSpecDoc.map(doc => doc.specificityCount)
+      );
+      expect(totalSpecificityWeight).toBe(
+        sum(sampleFeeSpec.map(spec => spec.specificityCount))
+      );
     });
   });
 });

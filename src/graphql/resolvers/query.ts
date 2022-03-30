@@ -44,10 +44,11 @@ export const computeTransactionFee = async (
     if (isEmpty(feeSpecDoc))
       throw new UserInputError('No fee configuration for this transaction');
 
+    // sort in ascending order of specificity weight
     const sortedSpecDoc = sortBy(feeSpecDoc, item => item.specificityCount);
 
     // select the most apt configuration to apply based on its precedence
-    const feeSpec = sortedSpecDoc[0];
+    const feeSpec = sortedSpecDoc[sortedSpecDoc.length - 1];
 
     // TODO: applied value is expected to be of type number
     const appliedFeeValue = computeAppliedFeeValue(
