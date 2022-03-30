@@ -1,24 +1,29 @@
 import {ApolloError} from 'apollo-server-errors';
-import Fees from '../dataSources/fees';
-import {MONGODB_URI} from '../config';
-import {MongoClient} from 'mongodb';
+import {DataSources} from '../types';
+import connectionToDB from '../utils/connectionToDB';
+import {feeSpecModel} from '../models/feeSpec.model';
 import {schema} from '../graphql/schema';
-
-// TODO: replace mongoose connection with this
-// TODO: move into appropriate dir
-if (!MONGODB_URI)
-  throw new ApolloError('No URI found...', 'DATABASE_CONNECTION_ERROR');
-
-const client = new MongoClient(MONGODB_URI);
-client.connect();
-console.log('Client is connected');
 
 export const serverConfig = {
   schema,
 
-  context: {
-    dataSources: {
-      fees: new Fees(client.db().collection('feespecmodels')),
-    },
+  context: async () => {
+    const dataSources: DataSources = {
+      fees: undefined,
+    };
+
+    try {
+      // connect to db
+      await connectionToDB();
+
+      dataSources.fees = feeSpecModel;
+    } catch (error) {
+      throw new ApolloError(
+        'Could not connect to database',
+        'DATABASE_CONNECTION_ERROR'
+      );
+    }
+
+    return {dataSources};
   },
 };

@@ -5,18 +5,18 @@ import {
 import {computeAppliedFeeValue, computeChargeAmount} from '../../utils';
 import {isEmpty, sortBy} from 'lodash';
 
+import {ContextValue} from '../../types';
 import {UserInputError} from 'apollo-server-errors';
 
 export const computeTransactionFee = async (
   _root: unknown,
   args: QueryComputeTransactionFeeArgs,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  context: any
+  context: ContextValue
 ): Promise<ComputeTransactionFeeResponse> => {
   try {
     // context.dataSources.fees.initialize();
     // ensure fee specification exists
-    const feeSpecDocCount = await context.dataSources.fees.getDocumentCount();
+    const feeSpecDocCount = await context.dataSources.fees?.countDocuments();
     if (feeSpecDocCount === 0)
       throw new UserInputError('Call /fee endpoint first');
 
@@ -39,7 +39,7 @@ export const computeTransactionFee = async (
       feeCurrency: {$in: [args.Currency, '*']},
     };
 
-    const feeSpecDoc = await context.dataSources.fees.getSpecFees(fields);
+    const feeSpecDoc = await context.dataSources.fees?.find(fields);
 
     if (isEmpty(feeSpecDoc))
       throw new UserInputError('No fee configuration for this transaction');

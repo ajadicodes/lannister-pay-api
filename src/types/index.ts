@@ -1,5 +1,7 @@
 import {Document, ObjectId} from 'mongoose';
 
+import mongoose from 'mongoose';
+
 export interface Entity {
   feeEntity: string;
   entityProperty: string;
@@ -51,4 +53,12 @@ export interface Fields {
     | boolean
     | ObjectId
     | (string | number | boolean | ObjectId)[];
+}
+
+export interface DataSources {
+  fees: mongoose.Model<FeeSpecDocument> | undefined;
+}
+
+export interface ContextValue {
+  dataSources: DataSources;
 }

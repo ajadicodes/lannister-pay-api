@@ -6,7 +6,7 @@ import {FeeSpecDocument} from '../types';
 // import mongooseValidationErrorTransform from 'mongoose-validation-error-transform'
 
 const schema = new Schema<FeeSpecDocument>({
-  feeID: {type: String, required: true, unique: true},
+  feeID: {type: String, required: true},
   feeCurrency: {type: String, required: true},
   feeLocale: {type: String, required: true},
   entity: {
