@@ -1,9 +1,7 @@
+import {graphql, rest} from './servers';
+
 import {PORT} from './config';
-import bodyParser from 'body-parser';
-import express from 'express';
 import fastify from 'fastify';
-import graphql from './servers/graphql';
-import rest from './servers/rest';
 import {serverConfig} from './servers/config';
 
 (async () => {

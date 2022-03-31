@@ -1,13 +1,12 @@
 import {ApolloServer} from 'apollo-server-fastify';
 import {ApolloServerPlugin} from 'apollo-server-plugin-base';
-import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core/dist/plugin/drainHttpServer';
+import {ApolloServerPluginDrainHttpServer} from 'apollo-server-core';
 import {ContextValue} from 'sofa-api/types';
 import {FastifyInstance} from 'fastify';
 import {GraphQLSchema} from 'graphql';
-import http from 'http';
 import {serverConfig} from './config';
 
-function fastifyAppClosePlugin(app: FastifyInstance): ApolloServerPlugin {
+const fastifyAppClosePlugin = (app: FastifyInstance): ApolloServerPlugin => {
   return {
     async serverWillStart() {
       return {
@@ -17,11 +16,10 @@ function fastifyAppClosePlugin(app: FastifyInstance): ApolloServerPlugin {
       };
     },
   };
-}
+};
 
 export const apolloGraphqlServer = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  app: any,
+  app: FastifyInstance,
   {schema, context}: {schema: GraphQLSchema; context: ContextValue}
 ) => {
   const server = new ApolloServer({
@@ -48,8 +46,7 @@ export const apolloGraphqlServer = (
 };
 
 export default async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  app: any,
+  app: FastifyInstance,
   {
     schema,
     context,
@@ -58,5 +55,9 @@ export default async (
   const graphqlServer = apolloGraphqlServer(app, {schema, context});
 
   await graphqlServer.start();
-  app.register(graphqlServer.createHandler());
+  app.register(
+    graphqlServer.createHandler({
+      // disableHealthCheck: true,
+    })
+  );
 };

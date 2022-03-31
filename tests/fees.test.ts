@@ -4,13 +4,11 @@ import {
   feeSpecification,
 } from './helpers/data/fees';
 
-import bodyParser from 'body-parser';
+import {AddFeeMutationResponse} from '../src/types/resolvers-types';
 import connectionToDB from '../src/utils/connectionToDB';
-import express from 'express';
+import fastify from 'fastify';
 import {feeSpecModel} from '../src/models/feeSpec.model';
 import mongoose from 'mongoose';
-// eslint-disable-next-line node/no-unpublished-import
-import request from 'supertest';
 import rest from '../src/servers/rest';
 import {sampleFeeSpec} from './helpers/data/transactions';
 import {serverConfig} from '../src/servers/config';
@@ -24,21 +22,19 @@ beforeEach(async () => {
 describe('fees', () => {
   describe('Rest API', () => {
     it('should return a request succeeded status', async () => {
-      const app = express();
-      app.use(bodyParser.json());
+      const app = fastify();
       rest(app, serverConfig);
+      const response = await app.inject({
+        method: 'POST',
+        url: '/fees',
+        payload: feeSpecification.payload,
+      });
 
-      const response = await request(app)
-        .post('/fees')
-        .send(feeSpecification.payload);
+      const body = JSON.parse(response.body) as AddFeeMutationResponse;
 
-      expect(response.status).toEqual(feeSpecification.expectedResponse.code);
-      expect(response.body.message).toBe(
-        feeSpecification.expectedResponse.message
-      );
-      expect(response.body.success).toBe(
-        feeSpecification.expectedResponse.success
-      );
+      expect(body.code).toEqual(feeSpecification.expectedResponse.code);
+      expect(body.message).toBe(feeSpecification.expectedResponse.message);
+      expect(body.success).toBe(feeSpecification.expectedResponse.success);
 
       // test specificity weight
       const feeSpecDoc = await feeSpecModel.find(
@@ -54,19 +50,21 @@ describe('fees', () => {
     });
 
     it('should fail as fee spec contains invalid format', async () => {
-      const app = express();
-      app.use(bodyParser.json());
+      const app = fastify();
       rest(app, serverConfig);
+      const response = await app.inject({
+        method: 'POST',
+        url: '/fees',
+        payload: badlyFormattedFeeConfigSpec.payload,
+      });
 
-      const response = await request(app)
-        .post('/fees')
-        .send(badlyFormattedFeeConfigSpec.payload);
+      const body = JSON.parse(response.body) as AddFeeMutationResponse;
 
-      expect(response.status).toEqual(
+      expect(body.code).toEqual(
         badlyFormattedFeeConfigSpec.expectedResponse.code
       );
-      expect(response.body.message).toBeDefined();
-      expect(response.body.success).toBe(
+      expect(body.message).toBeDefined();
+      expect(body.success).toBe(
         badlyFormattedFeeConfigSpec.expectedResponse.success
       );
     });

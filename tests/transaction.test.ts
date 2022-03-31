@@ -1,13 +1,12 @@
 import {COMPUTE_TRANSACTION_FEE, testServer} from './helpers/utils';
 import {sampleFeeSpec, sampleTransactions} from './helpers/data/transactions';
 
-import bodyParser from 'body-parser';
+import {ComputeTransactionFeeResponse} from '../src/types/resolvers-types';
 import connectionToDB from '../src/utils/connectionToDB';
-import express from 'express';
+import fastify from 'fastify';
 import {feeSpecModel} from '../src/models/feeSpec.model';
 import mongoose from 'mongoose';
 // eslint-disable-next-line node/no-unpublished-import
-import request from 'supertest';
 import rest from '../src/servers/rest';
 import {serverConfig} from '../src/servers/config';
 
@@ -25,25 +24,23 @@ describe('compute-transaction-fee', () => {
     it.each(sampleTransactions)(
       'applies correct configuration fee for transaction with $payload.ID',
       async ({payload, expectedResponse}) => {
-        const app = express();
-        app.use(bodyParser.json());
+        const app = fastify();
         rest(app, serverConfig);
+        const response = await app.inject({
+          method: 'POST',
+          url: '/compute-transaction-fee',
+          payload,
+        });
 
-        const response = await request(app)
-          .post('/compute-transaction-fee')
-          .send(payload);
+        const body = JSON.parse(response.body) as ComputeTransactionFeeResponse;
 
-        expect(response.status).toBe(expectedResponse.code);
-        expect(response.body.success).toBe(expectedResponse.success);
-        expect(response.body.message).toBe(expectedResponse.message);
-        expect(response.body.AppliedFeeID).toBe(expectedResponse.AppliedFeeID);
-        expect(response.body.AppliedFeeValue).toBe(
-          expectedResponse.AppliedFeeValue
-        );
-        expect(response.body.ChargeAmount).toBe(expectedResponse.ChargeAmount);
-        expect(response.body.SettlementAmount).toBe(
-          expectedResponse.SettlementAmount
-        );
+        expect(body.code).toBe(expectedResponse.code);
+        expect(body.success).toBe(expectedResponse.success);
+        expect(body.message).toBe(expectedResponse.message);
+        expect(body.AppliedFeeID).toBe(expectedResponse.AppliedFeeID);
+        expect(body.AppliedFeeValue).toBe(expectedResponse.AppliedFeeValue);
+        expect(body.ChargeAmount).toBe(expectedResponse.ChargeAmount);
+        expect(body.SettlementAmount).toBe(expectedResponse.SettlementAmount);
       }
     );
   });

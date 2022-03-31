@@ -1,5 +1,4 @@
 import {apolloGraphqlServer} from '../../src/servers/graphql';
-import express from 'express';
 import fastify from 'fastify';
 import {gql} from 'apollo-server-core';
 import {serverConfig} from '../../src/servers/config';

@@ -1,18 +1,10 @@
-import {OpenAPI, useSofa} from 'sofa-api';
-
 import {ContextValue} from 'sofa-api/types';
+import {FastifyInstance} from 'fastify';
 import {GraphQLSchema} from 'graphql';
-import cors from 'cors';
 import {createSofaRouter} from 'sofa-api';
-import getStream from 'get-stream';
-import http from 'http';
-import {resolve} from 'path';
-import swaggerDocument from '../../swagger.json';
-import swaggerUi from 'swagger-ui-express';
 
 export default (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  app: any,
+  app: FastifyInstance,
   {schema, context}: {schema: GraphQLSchema; context: ContextValue}
 ) => {
   // const openApi = OpenAPI({
@@ -22,7 +14,6 @@ export default (
   //     version: '1.0.0',
   //   },
   // });
-  const basePath = '';
 
   // app.use(cors());
 
@@ -73,9 +64,6 @@ export default (
     method: ['POST', 'GET'],
     url: '*',
     handler: async function (req: any, res: any) {
-      console.log('===== working =====');
-      console.log('REQ', req.body);
-
       try {
         const response = await invokeSofa({
           method: req.method,
@@ -85,7 +73,6 @@ export default (
             typeof context === 'function' ? await context() : context,
         });
 
-        console.log('RESPONSE:', response);
         if (response) {
           const headers = {
             'Content-Type': 'application/json',
