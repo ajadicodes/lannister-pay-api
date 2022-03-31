@@ -2044,6 +2044,15 @@ apollo-link@^1.2.14:
     tslib "^1.9.3"
     zen-observable-ts "^0.8.21"
 
+apollo-mongodb-datasource@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/apollo-mongodb-datasource/-/apollo-mongodb-datasource-1.2.0.tgz#cb508d40c0f74fc2a9cce4132bbcc2d79c30ecc5"
+  integrity sha512-gGG9UKT5iXvgiXJbDC3fV7vFYnKNqzTJaGk5ttcoG1G91muXhIFdvZFh0AC0ekhaDJr8E7RZAQ7YWuHjiWQxww==
+  dependencies:
+    apollo-datasource "^3.3.1"
+    apollo-server-caching "^3.3.0"
+    mongodb "^4.4.1"
+
 apollo-reporting-protobuf@^0.8.0:
   version "0.8.0"
   resolved "https://registry.npmjs.org/apollo-reporting-protobuf/-/apollo-reporting-protobuf-0.8.0.tgz"

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {ContextFn, OpenAPI, useSofa} from 'sofa-api';
+import {OpenAPI, useSofa} from 'sofa-api';
 
 import {ContextValue} from 'sofa-api/types';
 import {GraphQLSchema} from 'graphql';

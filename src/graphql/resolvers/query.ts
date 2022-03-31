@@ -16,7 +16,7 @@ export const computeTransactionFee = async (
   try {
     // context.dataSources.fees.initialize();
     // ensure fee specification exists
-    const feeSpecDocCount = await context?.dataSources?.fees.countDocuments();
+    const feeSpecDocCount = await context.dataSources.fees?.countDocuments();
     if (feeSpecDocCount === 0)
       throw new UserInputError('Call /fee endpoint first');
 
@@ -39,15 +39,16 @@ export const computeTransactionFee = async (
       feeCurrency: {$in: [args.Currency, '*']},
     };
 
-    const feeSpecDoc = await context?.dataSources?.fees.find(fields);
+    const feeSpecDoc = await context.dataSources.fees?.find(fields);
 
     if (isEmpty(feeSpecDoc))
       throw new UserInputError('No fee configuration for this transaction');
 
+    // sort in ascending order of specificity weight
     const sortedSpecDoc = sortBy(feeSpecDoc, item => item.specificityCount);
 
     // select the most apt configuration to apply based on its precedence
-    const feeSpec = sortedSpecDoc[0];
+    const feeSpec = sortedSpecDoc[sortedSpecDoc.length - 1];
 
     // TODO: applied value is expected to be of type number
     const appliedFeeValue = computeAppliedFeeValue(
