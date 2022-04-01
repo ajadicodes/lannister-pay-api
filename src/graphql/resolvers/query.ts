@@ -24,6 +24,7 @@ export const computeTransactionFee = async (
       args.CurrencyCountry === args.PaymentEntity.Country ? 'LOCL' : 'INTL';
 
     const fields = {
+      'entity.feeEntity': {$in: [args.PaymentEntity.Type, '*']},
       'entity.entityProperty': {
         $in: [
           args.PaymentEntity.Brand,
@@ -34,7 +35,6 @@ export const computeTransactionFee = async (
           '*',
         ],
       },
-      'entity.feeEntity': {$in: [args.PaymentEntity.Type, '*']},
       feeLocale: {$in: [locale, '*']},
       feeCurrency: {$in: [args.Currency, '*']},
     };

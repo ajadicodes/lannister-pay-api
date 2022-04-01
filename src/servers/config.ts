@@ -8,9 +8,7 @@ export const serverConfig = {
   schema,
 
   context: async () => {
-    const dataSources: DataSources = {
-      fees: undefined,
-    };
+    const dataSources: DataSources = {};
 
     try {
       // connect to db
