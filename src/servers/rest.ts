@@ -1,27 +1,32 @@
+import {OpenAPI, createSofaRouter} from 'sofa-api';
+
 import {ContextValue} from 'sofa-api/types';
 import {FastifyInstance} from 'fastify';
 import {GraphQLSchema} from 'graphql';
-import {createSofaRouter} from 'sofa-api';
+import {resolve} from 'path';
 
 export default (
   app: FastifyInstance,
   {schema, context}: {schema: GraphQLSchema; context: ContextValue}
 ) => {
-  // const openApi = OpenAPI({
-  //   schema,
-  //   info: {
-  //     title: 'LannisterPay REST API',
-  //     version: '1.0.0',
-  //   },
-  // });
+  const openApi = OpenAPI({
+    schema,
+    info: {
+      title: 'LannisterPay REST API',
+      version: '1.0.0',
+    },
+  });
 
-  // app.use(cors());
+  const basePath = '';
 
   const invokeSofa = createSofaRouter({
-    basePath: '',
+    basePath,
     schema,
     routes: {
       'Query.computeTransactionFee': {method: 'POST'},
+    },
+    onRoute(info) {
+      openApi.addRoute(info, {basePath});
     },
     errorHandler(errors) {
       // properly format error thrown in GraphQL operations for the
@@ -99,9 +104,16 @@ export default (
   });
 
   // writes every recorder route
-  // openApi.save(resolve(__dirname, '../../swagger.json'));
-  // openApi.save(resolve(__dirname, '../../swagger.yml'));
+  openApi.save(resolve(__dirname, '../../swagger.json'));
+  openApi.save(resolve(__dirname, '../../swagger.yml'));
 
   // expose rest docs
-  // app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.register(require('fastify-swagger'), {
+    mode: 'static',
+    specification: {
+      path: resolve(__dirname, '../../swagger.json'),
+    },
+    exposeRoute: true,
+    routePrefix: '/',
+  });
 };

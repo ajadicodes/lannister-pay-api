@@ -16,6 +16,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
     "fastify": "^3.27.4",
+    "fastify-swagger": "^5.1.0",
     "get-stream": "^6.0.1",
     "graphql": "^16.3.0",
     "lodash": "^4.17.21",
