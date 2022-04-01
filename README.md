@@ -17,6 +17,7 @@ REST & GraphQL APIs for LannisterPay’s transaction fee processing service.
 One code base two -- REST & GraphQL -- APIs.
 
 - Written in TypeScript
+- Express 🤝 Apollo-Server
 - GraphQL API :link: [/graphql](https://lannister-pay-api-app.herokuapp.com/graphql)
 - Auto-generated REST API based on their respective GraphQL served :link: [/fees](https://lannister-pay-api-app.herokuapp.com/fees) & [/compute-transaction-fee](https://lannister-pay-api-app.herokuapp.com/compute-transaction-fee)
 - Fully generated documentation that is always up-to-date :link: [See docs](https://lannister-pay-api-app.herokuapp.com/).
