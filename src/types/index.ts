@@ -1,6 +1,5 @@
-import {Document, Model} from 'mongoose';
-
-import {ObjectId} from 'mongodb';
+import {ObjectId} from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface Entity {
   feeEntity: string;
@@ -41,7 +40,7 @@ export interface Fields {
 }
 
 export interface DataSources {
-  fees: Model<FeeSpec> | undefined;
+  fees?: mongoose.Model<FeeSpec>;
 }
 
 export interface ContextValue {

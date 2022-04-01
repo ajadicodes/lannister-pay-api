@@ -31,9 +31,9 @@ const schema = new Schema<FeeSpec>({
 // })
 schema.index({
   'entity.feeEntity': 'hashed',
-  'entity.entityProperty': -1,
-  feeLocale: -1,
-  feeCurrency: -1,
+  'entity.entityProperty': 1,
+  feeLocale: 1,
+  feeCurrency: 1,
 });
 const feeSpecModel = mongoose.model('FeeSpecModel', schema, 'feespecmodels');
 export {feeSpecModel};
