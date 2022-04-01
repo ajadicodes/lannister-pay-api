@@ -87,10 +87,10 @@ export default (
           res.headers = headers;
 
           if (response.type === 'result') {
-            res.send(JSON.stringify(response.body));
+            res.send(response.body);
           }
           if (response.type === 'error') {
-            res.send(JSON.stringify(response.error));
+            res.send(response.error);
           }
         } else {
           res.code = 404;
@@ -98,7 +98,7 @@ export default (
         }
       } catch (error) {
         res.code = 500;
-        res.send(JSON.stringify(error));
+        res.send(error);
       }
     },
   });
