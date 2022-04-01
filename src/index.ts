@@ -1,13 +1,13 @@
-import Fastify from 'fastify';
+import {graphql, rest} from './servers';
+
 import {PORT} from './config';
-import bodyParser from 'body-parser';
-import express from 'express';
-import graphql from './servers/graphql';
-import rest from './servers/rest';
+import fastify from 'fastify';
 import {serverConfig} from './servers/config';
 
 (async () => {
-  const app = Fastify();
+  const app = fastify({
+    logger: true,
+  });
   // app.use(bodyParser.json());
 
   graphql(app, serverConfig);

@@ -1,11 +1,12 @@
-import {FeeSpec, FeeSpecDocument} from '../types';
 import mongoose, {Schema} from 'mongoose';
+
+import {FeeSpec} from '../types';
 
 // import beautifulUnique from 'mongoose-beautiful-unique-validation'
 // import mongooseValidationErrorTransform from 'mongoose-validation-error-transform'
 
 const schema = new Schema<FeeSpec>({
-  feeID: {type: String, required: true, unique: true},
+  feeID: {type: String, required: true},
   feeCurrency: {type: String, required: true},
   feeLocale: {type: String, required: true},
   entity: {
@@ -29,8 +30,8 @@ const schema = new Schema<FeeSpec>({
 //   transform: (messages: string[]) => messages.join(' '),
 // })
 schema.index({
-  'entity.entityProperty': 'hashed',
-  'entity.feeEntity': 1,
+  'entity.feeEntity': 'hashed',
+  'entity.entityProperty': 1,
   feeLocale: 1,
   feeCurrency: 1,
 });

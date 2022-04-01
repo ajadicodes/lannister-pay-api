@@ -1,6 +1,5 @@
-import {Document, Model} from 'mongoose';
-
-import {ObjectId} from 'mongodb';
+import {ObjectId} from 'mongoose';
+import mongoose from 'mongoose';
 
 export interface Entity {
   feeEntity: string;
@@ -21,12 +20,7 @@ export type FeeValue = Flat | Perc | FlatPerc;
 
 export type FeeType = FeeValue['type'];
 
-// Although mongoose does not recommend our document interface
-// extend Document -- even though they themselves say many Mongoose TypeScript
-// codebases use this approach -- it is used here because its the only way
-// the version of apollo-datasource-mongodb -- used in this codebase --
-// differentiates between a Model and a Collection type.
-export interface FeeSpecDocument extends Document {
+export interface FeeSpec {
   feeID: string;
   feeCurrency: string;
   feeLocale: string;
@@ -35,16 +29,6 @@ export interface FeeSpecDocument extends Document {
   feeValue: FeeValue;
   specificityCount: number;
 }
-
-export type FeeSpec = Pick<
-  FeeSpecDocument,
-  | 'feeID'
-  | 'feeCurrency'
-  | 'feeLocale'
-  | 'entity'
-  | 'feeValue'
-  | 'specificityCount'
->;
 
 export interface Fields {
   [fieldName: string]:
@@ -55,10 +39,10 @@ export interface Fields {
     | (string | number | boolean | ObjectId)[];
 }
 
-interface DataSources {
-  fees: Model<FeeSpec>;
+export interface DataSources {
+  fees?: mongoose.Model<FeeSpec>;
 }
 
 export interface ContextValue {
-  dataSources?: DataSources;
+  dataSources: DataSources;
 }
