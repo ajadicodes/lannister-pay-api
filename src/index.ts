@@ -11,7 +11,7 @@ import {serverConfig} from './servers/config';
   // app.use(bodyParser.json());
 
   graphql(app, serverConfig);
-  // rest(app, serverConfig);
+  rest(app, serverConfig);
 
   app.listen(PORT);
   console.log(`🚀  Server ready http://localhost:${PORT}`);

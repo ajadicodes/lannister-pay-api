@@ -1,7 +1,6 @@
 import {graphql, rest} from '../../src/servers';
 
-import bodyParser from 'body-parser';
-import express from 'express';
+import fastify from 'fastify';
 import {gql} from 'apollo-server-core';
 import {serverConfig} from '../../src/servers/config';
 
@@ -80,10 +79,9 @@ export const COMPUTE_TRANSACTION_FEE = gql`
 `;
 
 export const testServer = (server: 'rest' | 'graphql' = 'rest') => {
-  const app = express();
+  const app = fastify();
 
   if (server === 'rest') {
-    app.use(bodyParser.json());
     rest(app, serverConfig);
     return app;
   }

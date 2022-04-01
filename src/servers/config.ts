@@ -2,18 +2,10 @@ import {ApolloError} from 'apollo-server-errors';
 import {DataSources} from '../types';
 import connectionToDB from '../utils/connectionToDB';
 import {feeSpecModel} from '../models/feeSpec.model';
-import {isEmpty} from 'lodash';
 import {schema} from '../graphql/schema';
 
 export const serverConfig = {
   schema,
-  context: async (): Promise<ContextValue> => {
-    const dataSources: any = {};
-    if (isEmpty(dataSources)) {
-      try {
-        await connectionToDB();
-        console.log('=== Successfully connected to database ===');
-
   context: async () => {
     const dataSources: DataSources = {};
 

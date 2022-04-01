@@ -6,12 +6,11 @@ import {
 
 import {AddFeeMutationResponse} from '../src/types/resolvers-types';
 import connectionToDB from '../src/utils/connectionToDB';
-import fastify from 'fastify';
+// eslint-disable-next-line node/no-unpublished-import
+import {createMercuriusTestClient} from 'mercurius-integration-testing';
 import {feeSpecModel} from '../src/models/feeSpec.model';
 import mongoose from 'mongoose';
-import rest from '../src/servers/rest';
 import {sampleFeeSpec} from './helpers/data/transactions';
-import {serverConfig} from '../src/servers/config';
 import {sum} from 'lodash';
 
 beforeEach(async () => {
@@ -22,8 +21,7 @@ beforeEach(async () => {
 describe('fees', () => {
   describe('Rest API', () => {
     it('should return a request succeeded status', async () => {
-      const app = fastify();
-      rest(app, serverConfig);
+      const app = testServer('rest');
       const response = await app.inject({
         method: 'POST',
         url: '/fees',
@@ -50,8 +48,7 @@ describe('fees', () => {
     });
 
     it('should fail as fee spec contains invalid format', async () => {
-      const app = fastify();
-      rest(app, serverConfig);
+      const app = testServer('rest');
       const response = await app.inject({
         method: 'POST',
         url: '/fees',
@@ -74,9 +71,11 @@ describe('fees', () => {
     it('fails because fee specification is badly formatted', async () => {
       const feeConfigSpec =
         badlyFormattedFeeConfigSpec.payload.FeeConfigurationSpec;
-      const {data, errors} = await testServer().executeOperation({
-        query: ADD_FEE_CONFIGURATION_SPEC,
-        variables: {FeeConfigurationSpec: feeConfigSpec},
+      const client = createMercuriusTestClient(testServer('graphql'));
+      const {data, errors} = await client.mutate(ADD_FEE_CONFIGURATION_SPEC, {
+        variables: {
+          FeeConfigurationSpec: feeConfigSpec,
+        },
       });
 
       expect(data).toBeFalsy();
@@ -87,9 +86,12 @@ describe('fees', () => {
 
     test('successfully registers fee specification', async () => {
       const feeConfigSpec = feeSpecification.payload.FeeConfigurationSpec;
-      const {data, errors} = await testServer().executeOperation({
-        query: ADD_FEE_CONFIGURATION_SPEC,
-        variables: {FeeConfigurationSpec: feeConfigSpec},
+
+      const client = createMercuriusTestClient(testServer('graphql'));
+      const {data, errors} = await client.mutate(ADD_FEE_CONFIGURATION_SPEC, {
+        variables: {
+          FeeConfigurationSpec: feeConfigSpec,
+        },
       });
 
       expect(data?.fees?.code).toBe(feeSpecification.expectedResponse.code);

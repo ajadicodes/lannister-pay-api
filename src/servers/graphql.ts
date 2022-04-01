@@ -1,5 +1,4 @@
 import {GraphQLSchema} from 'graphql';
-import {graphqlHTTP} from 'express-graphql';
 import mercurius from 'mercurius';
 import {serverConfig} from './config';
 
